@@ -4,22 +4,22 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
 
   api:
     build: .
     depends_on:
       - db
-    environment:
-      DATABASE_URL: postgres://myuser:mypassword@db:5432/mydatabase
+    env_file:
+      - .env
     ports:
-      - "3000:3000"
+      - "${WEB_SERVER_PORT}:${WEB_SERVER_PORT}"
 
 volumes:
   db_data:
